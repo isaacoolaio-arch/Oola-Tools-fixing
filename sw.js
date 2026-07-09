@@ -1,4 +1,4 @@
-const CACHE = 'toolfix-v1';
+const CACHE = 'toolfix-v2';
 const ASSETS = ['./', './index.html', './data.js', './manifest.json'];
 
 self.addEventListener('install', e => {
