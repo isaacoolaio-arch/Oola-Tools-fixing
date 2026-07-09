@@ -128,6 +128,17 @@ h3{font:600 15px/1.3 var(--f-body);letter-spacing:.01em;margin-bottom:6px}
   color:var(--steel);margin-bottom:12px;
 }
 
+/* ── Photo steps ───────────────────────── */
+.psteps{margin:22px 0}
+.pstep{display:flex;gap:12px;margin-bottom:14px;align-items:flex-start}
+.pstep-n{
+  flex-shrink:0;width:26px;height:26px;display:flex;align-items:center;justify-content:center;
+  background:var(--arc);color:var(--ink);font:600 13px/1 var(--f-mono);
+}
+.pstep-body{flex:1}
+.pstep-body img{width:100%;height:auto;display:block;border:1px solid var(--line);background:var(--ink)}
+.pstep-cap{font:400 13px/1.5 var(--f-body);color:var(--ink-2);padding:8px 0 0}
+
 /* ── Photos ────────────────────────────── */
 .shots{margin:22px 0}
 figure{margin:0 0 18px}
@@ -417,6 +428,18 @@ function symView(id){
     h += `<div class="sketch">
       <div class="sketch-cap">How it goes together</div>
       ${SKETCHES[s.sketch]}
+    </div>`;
+  }
+
+  if(s.photoSteps && s.photoSteps.length){
+    h += `<div class="psteps"><div class="eyebrow">Step by step, on this machine</div>
+      ${s.photoSteps.map((p,i) => `<div class="pstep">
+        <div class="pstep-n">${i+1}</div>
+        <div class="pstep-body">
+          <img src="${esc(p.src)}" alt="Step ${i+1}: ${esc(p.cap)}" loading="lazy" decoding="async">
+          <div class="pstep-cap">${esc(p.cap)}</div>
+        </div>
+      </div>`).join('')}
     </div>`;
   }
 
