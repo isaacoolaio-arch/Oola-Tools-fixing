@@ -1,8 +1,19 @@
-const CACHE = 'toolfix-v2';
-const ASSETS = ['./', './index.html', './data.js', './manifest.json'];
+const CACHE = 'toolfix-v3';
+const ASSETS = [
+  './', './index.html', './data.js', './manifest.json',
+  './img/drill.webp', './img/drill-plate.webp',
+  './img/grinder-disc.webp', './img/grinder-plate.webp',
+  './img/welder.webp'
+];
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
+  // addAll() is atomic — one bad asset kills the whole precache and with it
+  // the offline mode. Cache each asset independently instead.
+  e.waitUntil(
+    caches.open(CACHE)
+      .then(c => Promise.all(ASSETS.map(a => c.add(a).catch(() => {}))))
+      .then(() => self.skipWaiting())
+  );
 });
 
 self.addEventListener('activate', e => {
