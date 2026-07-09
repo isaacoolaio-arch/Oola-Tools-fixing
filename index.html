@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#171412">
+<title>ToolFix — Oola Garage</title>
+<link rel="manifest" href="manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Archivo+Black&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#171412;
+  --ink-2:#2A2622;
+  --paper:#EFEAE2;
+  --paper-2:#E2DBCF;
+  --steel:#7C8B8F;
+  --arc:#FFB300;
+  --stop:#C4362B;
+  --safe:#4A7C59;
+  --line:rgba(23,20,18,.14);
+
+  --f-display:'Archivo Black',system-ui,sans-serif;
+  --f-body:'Archivo',system-ui,sans-serif;
+  --f-mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:var(--f-body);
+  background:var(--paper);
+  color:var(--ink);
+  font-size:16px;
+  line-height:1.55;
+  overflow-x:hidden;
+}
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.35;
+  background-image:radial-gradient(circle at 1px 1px, rgba(23,20,18,.13) 1px, transparent 0);
+  background-size:4px 4px;
+}
+
+/* ── Shell ─────────────────────────────── */
+.app{display:flex;flex-direction:column;min-height:100dvh;position:relative;z-index:2}
+
+header{
+  background:var(--ink);color:var(--paper);
+  padding:14px 18px;
+  display:flex;align-items:center;gap:12px;
+  position:sticky;top:0;z-index:50;
+  border-bottom:3px solid var(--arc);
+}
+.back{
+  background:none;border:0;color:var(--paper);
+  font:600 15px/1 var(--f-body);cursor:pointer;
+  padding:8px 10px 8px 0;display:none;letter-spacing:.02em;
+}
+.back.on{display:block}
+.brand{font:400 19px/1 var(--f-display);letter-spacing:-.02em;flex:1}
+.brand span{color:var(--arc)}
+.net{
+  font:500 10px/1 var(--f-mono);letter-spacing:.1em;
+  padding:5px 8px;border:1px solid rgba(239,234,226,.3);border-radius:2px;
+  color:var(--steel);
+}
+.net.off{color:var(--arc);border-color:var(--arc)}
+
+main{flex:1;padding:22px 18px 60px;max-width:640px;width:100%;margin:0 auto}
+
+/* ── Type ──────────────────────────────── */
+.eyebrow{
+  font:500 11px/1 var(--f-mono);letter-spacing:.18em;
+  text-transform:uppercase;color:var(--steel);margin-bottom:10px;
+}
+h1{font:400 30px/1.05 var(--f-display);letter-spacing:-.03em;margin-bottom:8px}
+h2{font:400 21px/1.15 var(--f-display);letter-spacing:-.02em;margin-bottom:10px}
+h3{font:600 15px/1.3 var(--f-body);letter-spacing:.01em;margin-bottom:6px}
+.lede{color:var(--ink-2);opacity:.72;font-size:15px;margin-bottom:26px;max-width:46ch}
+
+/* ── Tool cards ────────────────────────── */
+.tools{display:flex;flex-direction:column;gap:2px}
+.tool{
+  background:var(--ink);color:var(--paper);
+  border:0;width:100%;text-align:left;cursor:pointer;
+  padding:20px;display:block;position:relative;
+  transition:background .12s;
+}
+.tool:hover,.tool:focus-visible{background:var(--ink-2)}
+.tool:focus-visible{outline:2px solid var(--arc);outline-offset:-2px}
+.tool-type{font:500 10px/1 var(--f-mono);letter-spacing:.16em;text-transform:uppercase;color:var(--arc);margin-bottom:8px}
+.tool-name{font:400 20px/1.1 var(--f-display);letter-spacing:-.02em;margin-bottom:4px}
+.tool-meta{font:400 13px/1.4 var(--f-body);opacity:.5}
+.tool-count{
+  position:absolute;right:20px;bottom:20px;
+  font:500 11px/1 var(--f-mono);color:var(--steel);
+}
+.unbranded{
+  display:inline-block;margin-top:8px;
+  font:500 9px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink);background:var(--steel);padding:4px 6px;
+}
+
+/* ── Specs ─────────────────────────────── */
+.specs{border-top:1px solid var(--line);margin:22px 0}
+.spec{
+  display:flex;justify-content:space-between;gap:16px;
+  padding:9px 0;border-bottom:1px solid var(--line);
+  font-size:14px;
+}
+.spec dt{color:var(--ink-2);opacity:.6}
+.spec dd{font-family:var(--f-mono);font-size:13px;text-align:right}
+.spec.lie dd{color:var(--stop);text-decoration:line-through;text-decoration-thickness:1.5px}
+.spec.truth dd{color:var(--safe);font-weight:500}
+
+.note{
+  background:var(--paper-2);border-left:3px solid var(--steel);
+  padding:14px 16px;font-size:14px;line-height:1.6;margin:18px 0;
+  color:var(--ink-2);
+}
+
+/* ── Symptom list ──────────────────────── */
+.sym-list{display:flex;flex-direction:column;gap:2px;margin-top:20px}
+.sym{
+  width:100%;text-align:left;cursor:pointer;border:0;
+  background:var(--ink);color:var(--paper);padding:18px 20px;
+  display:flex;align-items:flex-start;gap:14px;
+  transition:background .12s;
+}
+.sym:hover,.sym:focus-visible{background:var(--ink-2)}
+.sym:focus-visible{outline:2px solid var(--arc);outline-offset:-2px}
+.dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:7px}
+.dot.safe{background:var(--safe)}
+.dot.caution{background:var(--arc)}
+.dot.stop-using{background:var(--stop)}
+.sym-body{flex:1}
+.sym-title{font:600 16px/1.3 var(--f-body);margin-bottom:3px}
+.sym-plain{font-size:13.5px;opacity:.5}
+
+/* ── Panels ────────────────────────────── */
+.panel{padding:20px;margin:20px 0;border:1px solid var(--line);background:var(--paper-2)}
+.panel h3{margin-bottom:10px}
+.panel p{font-size:14.5px;line-height:1.65;color:var(--ink-2)}
+.panel p + p{margin-top:12px}
+
+.panel.normal{
+  background:var(--ink);color:var(--paper);border:0;
+  border-left:4px solid var(--safe);
+}
+.panel.normal h3{color:var(--safe);font:400 17px/1.2 var(--f-display);letter-spacing:-.01em}
+.panel.normal p{color:var(--paper);opacity:.8}
+
+.panel.first{border-left:4px solid var(--arc);background:#fff}
+.panel.first h3{font:400 17px/1.2 var(--f-display);letter-spacing:-.01em}
+
+.panel.danger{
+  background:var(--stop);color:#fff;border:0;
+  border-left:4px solid var(--ink);
+}
+.panel.danger h3{color:#fff;font:400 18px/1.2 var(--f-display);letter-spacing:-.01em}
+.panel.danger p{color:#fff;opacity:.92}
+.panel.danger .rule{
+  margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.3);
+  font-weight:600;
+}
+
+.action{
+  margin-top:14px;padding:12px 14px;background:var(--ink);color:var(--arc);
+  font:500 13px/1.5 var(--f-mono);
+}
+.panel.first .action{background:var(--ink)}
+
+/* ── Table ─────────────────────────────── */
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:14px}
+th{
+  text-align:left;font:500 10px/1 var(--f-mono);letter-spacing:.14em;
+  text-transform:uppercase;color:var(--steel);
+  padding:0 0 8px;border-bottom:1px solid var(--line);
+}
+th:last-child,td:last-child{text-align:right}
+td{padding:10px 0;border-bottom:1px solid var(--line);font-family:var(--f-mono);font-size:13.5px}
+
+/* ── Disambiguate ──────────────────────── */
+.ask{margin:24px 0}
+.ask-q{font:600 16px/1.4 var(--f-body);margin-bottom:14px}
+.branch{
+  width:100%;text-align:left;cursor:pointer;
+  background:#fff;border:1px solid var(--ink);color:var(--ink);
+  padding:16px 18px;font:500 15px/1.4 var(--f-body);
+  margin-bottom:8px;transition:all .12s;
+  display:flex;align-items:center;gap:12px;
+}
+.branch:hover,.branch:focus-visible{background:var(--ink);color:var(--paper)}
+.branch:focus-visible{outline:2px solid var(--arc);outline-offset:2px}
+.branch::before{content:'→';font-family:var(--f-mono);color:var(--arc);flex-shrink:0}
+
+/* ── Causes ────────────────────────────── */
+.causes{margin-top:30px}
+.causes > .eyebrow{margin-bottom:14px}
+.cause{border:1px solid var(--line);background:#fff;margin-bottom:2px}
+.cause summary{
+  padding:16px 18px;cursor:pointer;list-style:none;
+  display:flex;align-items:center;gap:12px;
+}
+.cause summary::-webkit-details-marker{display:none}
+.cause summary:focus-visible{outline:2px solid var(--arc);outline-offset:-2px}
+.rank{
+  font:500 10px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;
+  padding:5px 7px;flex-shrink:0;
+}
+.rank.common{background:var(--arc);color:var(--ink)}
+.rank.occasional{background:var(--paper-2);color:var(--ink-2)}
+.rank.rare{background:transparent;color:var(--steel);border:1px solid var(--line)}
+.cause-name{font-weight:600;font-size:15px;flex:1}
+.chev{color:var(--steel);font-family:var(--f-mono);transition:transform .15s}
+.cause[open] .chev{transform:rotate(90deg)}
+.cause-body{padding:0 18px 18px 18px;border-top:1px solid var(--line);padding-top:16px}
+.step{margin-bottom:14px}
+.step:last-child{margin-bottom:0}
+.step-label{
+  font:500 10px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;
+  color:var(--steel);margin-bottom:5px;
+}
+.step p{font-size:14.5px;line-height:1.6;color:var(--ink-2)}
+.diff{
+  display:inline-block;margin-top:12px;padding:6px 9px;
+  font:500 10px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;
+}
+.diff.field{background:var(--safe);color:#fff}
+.diff.workshop{background:var(--ink);color:var(--paper)}
+.diff.electrician{background:var(--stop);color:#fff}
+.diff.replace-tool{background:var(--steel);color:var(--ink)}
+.parts{margin-top:12px;font-family:var(--f-mono);font-size:12.5px;color:var(--ink-2)}
+.parts span{background:var(--paper-2);padding:4px 7px;display:inline-block;margin:2px 2px 0 0}
+
+/* Gated cause — no procedure shown */
+.cause.gated{background:rgba(196,54,43,.05);border-color:rgba(196,54,43,.3)}
+.cause.gated summary{cursor:default}
+.cause.gated .cause-body{border-top:1px solid rgba(196,54,43,.2)}
+.gate-msg{
+  font:500 13.5px/1.6 var(--f-body);color:var(--stop);
+}
+
+footer{
+  padding:26px 18px;text-align:center;
+  font:400 11px/1.6 var(--f-mono);color:var(--steel);
+  border-top:1px solid var(--line);
+}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media(max-width:400px){
+  h1{font-size:26px}
+  main{padding:18px 14px 50px}
+  .tool,.sym{padding:16px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <button class="back" id="back" aria-label="Go back">← Back</button>
+    <div class="brand">Tool<span>Fix</span></div>
+    <div class="net" id="net">READY</div>
+  </header>
+  <main id="main"></main>
+  <footer>Oola Garage · Gulu · Content grounded in machines on site</footer>
+</div>
+
+<script src="data.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+const main = $('#main'), back = $('#back'), net = $('#net');
+let stack = [];
+
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+// ── Network badge ──
+function ping(){
+  const on = navigator.onLine;
+  net.textContent = on ? 'READY' : 'OFFLINE';
+  net.classList.toggle('off', !on);
+}
+addEventListener('online', ping);
+addEventListener('offline', ping);
+ping();
+
+// ── Routing ──
+function go(view, arg){
+  stack.push([view, arg]);
+  render();
+}
+function pop(){
+  stack.pop();
+  if(!stack.length) stack = [['home']];
+  render();
+}
+back.onclick = pop;
+
+function render(){
+  const [view, arg] = stack[stack.length - 1];
+  back.classList.toggle('on', stack.length > 1);
+  main.innerHTML = ({home, tool: toolView, symptom: symView})[view](arg);
+  main.scrollTop = 0;
+  window.scrollTo(0, 0);
+  bind();
+}
+
+// ── Views ──
+function home(){
+  return `
+    <div class="eyebrow">Workshop diagnostics</div>
+    <h1>Before you open<br>anything.</h1>
+    <p class="lede">Most tool faults are not faults. Check what the machine can actually do before you take it apart.</p>
+    <div class="tools">
+      ${TOOLS.map(t => {
+        const n = SYMPTOMS.filter(s => s.toolId === t.id && !s.hidden).length;
+        return `<button class="tool" data-tool="${t.id}">
+          <div class="tool-type">${esc(t.type)}</div>
+          <div class="tool-name">${esc(t.name)}</div>
+          <div class="tool-meta">${n} known fault${n===1?'':'s'}</div>
+          ${!t.brandKnown ? '<div class="unbranded">Unbranded</div>' : ''}
+          <div class="tool-count">${String(n).padStart(2,'0')}</div>
+        </button>`;
+      }).join('')}
+    </div>`;
+}
+
+function toolView(id){
+  const t = TOOLS.find(x => x.id === id);
+  const syms = SYMPTOMS.filter(s => s.toolId === id && !s.hidden);
+  const lies = {'Marked output':1,'Marked capacity':1};
+  const truths = {'Real output':1,'Real capacity':1};
+  return `
+    <div class="eyebrow">${esc(t.type)}</div>
+    <h1>${esc(t.name)}</h1>
+    <dl class="specs">
+      ${Object.entries(t.specs).map(([k,v]) => `
+        <div class="spec ${lies[k]?'lie':''} ${truths[k]?'truth':''}">
+          <dt>${esc(k)}</dt><dd>${esc(v)}</dd>
+        </div>`).join('')}
+    </dl>
+    ${t.notes ? `<div class="note">${esc(t.notes)}</div>` : ''}
+    <div class="eyebrow" style="margin-top:30px">What goes wrong</div>
+    <div class="sym-list">
+      ${syms.map(s => `<button class="sym" data-sym="${s.id}">
+        <span class="dot ${s.severity}"></span>
+        <span class="sym-body">
+          <span class="sym-title">${esc(s.symptom)}</span>
+          <span class="sym-plain">${esc(s.plain)}</span>
+        </span>
+      </button>`).join('')}
+    </div>`;
+}
+
+function symView(id){
+  const s = SYMPTOMS.find(x => x.id === id);
+  const t = TOOLS.find(x => x.id === s.toolId);
+  let h = `<div class="eyebrow">${esc(t.name)}</div><h1>${esc(s.symptom)}</h1>`;
+
+  if(s.normalOperation){
+    h += `<div class="panel normal">
+      <h3>${esc(s.normalOperation.title)}</h3>
+      <p>${esc(s.normalOperation.body)}</p>
+      <p>${esc(s.normalOperation.why)}</p>
+    </div>`;
+  }
+
+  if(s.firstCheck){
+    const f = s.firstCheck;
+    h += `<div class="panel first">
+      <h3>${esc(f.title)}</h3>
+      <p>${esc(f.body)}</p>
+      ${f.table ? `<table><thead><tr>${f.table.head.map(x=>`<th>${esc(x)}</th>`).join('')}</tr></thead>
+        <tbody>${f.table.rows.map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table>` : ''}
+      ${f.after ? `<p>${esc(f.after)}</p>` : ''}
+      ${f.calibrate ? `<p>${esc(f.calibrate)}</p>` : ''}
+      ${f.action ? `<div class="action">${esc(f.action)}</div>` : ''}
+    </div>`;
+  }
+
+  if(s.disambiguate){
+    h += `<div class="ask">
+      <div class="ask-q">${esc(s.disambiguate.question)}</div>
+      ${s.disambiguate.branches.map(b =>
+        `<button class="branch" data-sym="${b.goesTo}">${esc(b.answer)}</button>`).join('')}
+    </div>`;
+  }
+
+  if(s.causes && s.causes.length){
+    h += `<div class="causes"><div class="eyebrow">Causes, most likely first</div>
+      ${s.causes.map(c => {
+        const gated = c.difficulty === 'electrician';
+        return `<details class="cause ${gated?'gated':''}" ${gated?'open':''}>
+          <summary>
+            <span class="rank ${c.likelihood}">${esc(c.likelihood)}</span>
+            <span class="cause-name">${esc(c.cause)}</span>
+            ${gated?'':'<span class="chev">›</span>'}
+          </summary>
+          <div class="cause-body">
+            ${gated ? `
+              <div class="step">
+                <div class="step-label">How to check</div>
+                <p>${esc(c.check)}</p>
+              </div>
+              <p class="gate-msg">${esc(c.fix)}</p>
+              <span class="diff electrician">Electrician only</span>
+            ` : `
+              <div class="step">
+                <div class="step-label">How to check</div>
+                <p>${esc(c.check)}</p>
+              </div>
+              <div class="step">
+                <div class="step-label">What to do</div>
+                <p>${esc(c.fix)}</p>
+              </div>
+              <span class="diff ${c.difficulty}">${esc(c.difficulty.replace('-',' '))}</span>
+              ${c.parts.length ? `<div class="parts">${c.parts.map(p=>`<span>${esc(p)}</span>`).join('')}</div>` : ''}
+            `}
+          </div>
+        </details>`;
+      }).join('')}
+    </div>`;
+  }
+
+  if(s.warning){
+    h += `<div class="panel danger">
+      <h3>${esc(s.warning.title)}</h3>
+      <p>${esc(s.warning.body)}</p>
+      <p class="rule">${esc(s.warning.rule)}</p>
+    </div>`;
+  }
+  return h;
+}
+
+// ── Bind ──
+function bind(){
+  main.querySelectorAll('[data-tool]').forEach(b =>
+    b.onclick = () => go('tool', b.dataset.tool));
+  main.querySelectorAll('[data-sym]').forEach(b =>
+    b.onclick = () => go('symptom', b.dataset.sym));
+  // Electrician-only warnings cannot be collapsed away.
+  main.querySelectorAll('.cause.gated > summary').forEach(sm =>
+    sm.addEventListener('click', e => e.preventDefault()));
+}
+
+// ── Boot ──
+stack = [['home']];
+render();
+
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+</script>
+</body>
+</html>

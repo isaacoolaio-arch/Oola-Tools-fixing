@@ -1,0 +1,19 @@
+{
+  "name": "ToolFix — Oola Garage",
+  "short_name": "ToolFix",
+  "description": "Workshop tool troubleshooting. Check what the machine can actually do before you take it apart.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#EFEAE2",
+  "theme_color": "#171412",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%23171412'/%3E%3Cpath d='M256 96v320M96 256h320' stroke='%23FFB300' stroke-width='28' stroke-linecap='square'/%3E%3Ccircle cx='256' cy='256' r='96' fill='none' stroke='%23EFEAE2' stroke-width='28'/%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
