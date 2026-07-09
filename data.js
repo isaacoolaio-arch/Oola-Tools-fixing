@@ -75,6 +75,7 @@ const SYMPTOMS = [
   {
     id: "drill-no-reverse",
     toolId: "drill-makita-hp1630",
+    videos: [{"label": "More videos: drill trigger switch replacement", "url": "https://www.youtube.com/results?search_query=makita+drill+trigger+switch+replacement", "kind": "search"}],
     symptom: "Turns clockwise, will not turn anti-clockwise",
     plain: "Forward works. Reverse does nothing.",
     severity: "caution",
@@ -128,6 +129,7 @@ const SYMPTOMS = [
   {
     id: "grinder-weak",
     toolId: "grinder-lica-asm08-230",
+    videos: [{"label": "More videos: angle grinder loses power", "url": "https://www.youtube.com/results?search_query=angle+grinder+weak+loses+power+carbon+brushes", "kind": "search"}],
     sketch: "discAnim",
     symptom: "Grinder feels weak",
     plain: "It runs, but it does not cut the way it used to.",
@@ -167,6 +169,7 @@ const SYMPTOMS = [
   {
     id: "grinder-bogs-under-load",
     toolId: "grinder-lica-asm08-230",
+    videos: [{"label": "More videos: grinder carbon brush replacement", "url": "https://www.youtube.com/results?search_query=angle+grinder+carbon+brush+replacement", "kind": "search"}],
     sketch: "brush",    symptom: "Spins normally, bogs down under load",
     plain: "Full speed in the air. Dies the moment it meets steel.",
     severity: "safe",
@@ -256,6 +259,7 @@ const SYMPTOMS = [
   {
     id: "welder-overheats",
     toolId: "welder-mma-650s",
+    videos: [{"label": "More videos: welder duty cycle explained", "url": "https://www.youtube.com/results?search_query=welding+machine+duty+cycle+explained", "kind": "search"}],
     symptom: "Overheats and cuts out",
     plain: "The O.C lamp comes on and it stops welding.",
     severity: "stop-using",
@@ -333,6 +337,7 @@ const SYMPTOMS = [
   {
     id: "drill-sparking",
     toolId: "drill-makita-hp1630",
+    videos: [{"label": "Makita drill: replacing the carbon brushes", "url": "https://www.youtube.com/watch?v=8yID3YWVNq8", "kind": "video"}, {"label": "Drill brush replacement in 3 minutes", "url": "https://www.youtube.com/watch?v=oEMJfhLf9f0", "kind": "video"}, {"label": "More videos: drill carbon brushes", "url": "https://www.youtube.com/results?search_query=drill+carbon+brush+replacement", "kind": "search"}],
     sketch: "brush",    symptom: "Sparks from the motor vents",
     plain: "You can see flashes inside when it runs.",
     severity: "caution",
@@ -377,6 +382,7 @@ const SYMPTOMS = [
   {
     id: "drill-chuck-slips",
     toolId: "drill-makita-hp1630",
+    videos: [{"label": "More videos: keyed chuck tightening and replacement", "url": "https://www.youtube.com/results?search_query=keyed+drill+chuck+bit+slipping+fix", "kind": "search"}],
     sketch: "chuck",    symptom: "Bit slips or falls out of the chuck",
     plain: "The drill turns but the bit does not.",
     severity: "caution",
@@ -417,6 +423,7 @@ const SYMPTOMS = [
   {
     id: "grinder-wrong-disc",
     toolId: "grinder-lica-asm08-230",
+    videos: [{"label": "Changing an angle grinder disc, step by step", "url": "https://www.youtube.com/watch?v=YPy6U3ERZ9w", "kind": "video"}, {"label": "Removing a disc safely with the lock button", "url": "https://www.youtube.com/shorts/zA3gIH8QTA0", "kind": "video"}, {"label": "More videos: angle grinder disc change", "url": "https://www.youtube.com/results?search_query=angle+grinder+disc+change+flange+spanner", "kind": "search"}],
     sketch: "flangeExploded",    symptom: "Am I using the right disc?",
     plain: "Cutting disc, grinding wheel. They are not the same.",
     severity: "stop-using",
@@ -476,6 +483,7 @@ const SYMPTOMS = [
   {
     id: "grinder-noise",
     toolId: "grinder-lica-asm08-230",
+    videos: [{"label": "More videos: grinder bearing and gearbox repair", "url": "https://www.youtube.com/results?search_query=angle+grinder+bearing+gearbox+noise+repair", "kind": "search"}],
     symptom: "Screeching, grinding or rattling noise",
     plain: "It sounds wrong, disc or no disc.",
     severity: "stop-using",
@@ -523,6 +531,7 @@ const SYMPTOMS = [
   {
     id: "grinder-hot",
     toolId: "grinder-lica-asm08-230",
+    videos: [{"label": "More videos: grinder overheating causes", "url": "https://www.youtube.com/results?search_query=angle+grinder+overheating+causes", "kind": "search"}],
     symptom: "Gets too hot to hold",
     plain: "Five minutes of work and you cannot touch it.",
     severity: "caution",
@@ -571,6 +580,7 @@ const SYMPTOMS = [
   {
     id: "welder-rod-sticks",
     toolId: "welder-mma-650s",
+    videos: [{"label": "More videos: stick welding, stop electrode sticking", "url": "https://www.youtube.com/results?search_query=stick+welding+electrode+sticking+beginners", "kind": "search"}],
     symptom: "Rod sticks to the work every time",
     plain: "You strike, it welds itself to the plate, you wrench it off.",
     severity: "safe",
@@ -639,6 +649,7 @@ const SYMPTOMS = [
   {
     id: "welder-knobs",
     toolId: "welder-mma-650s",
+    videos: [{"label": "More videos: arc force and hot start explained", "url": "https://www.youtube.com/results?search_query=welder+arc+force+hot+start+explained", "kind": "search"}],
     symptom: "What do the three knobs actually do?",
     plain: "Current, Arc Force, Hot Start. Nobody set them.",
     severity: "safe",
