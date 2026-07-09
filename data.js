@@ -417,7 +417,7 @@ const SYMPTOMS = [
   {
     id: "grinder-wrong-disc",
     toolId: "grinder-lica-asm08-230",
-    sketch: "flangeAnim",    symptom: "Am I using the right disc?",
+    sketch: "flangeExploded",    symptom: "Am I using the right disc?",
     plain: "Cutting disc, grinding wheel. They are not the same.",
     severity: "stop-using",
     firstCheck: {
