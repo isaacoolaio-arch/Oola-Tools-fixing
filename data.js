@@ -423,8 +423,7 @@ const SYMPTOMS = [
   {
     id: "grinder-wrong-disc",
     toolId: "grinder-lica-asm08-230",
-    videos: [{"label": "Watch the full change — filmed on this grinder", "url": "video/disc-change.mp4", "kind": "video"},{"label": "Changing an angle grinder disc, step by step", "url": "https://www.youtube.com/watch?v=YPy6U3ERZ9w", "kind": "video"}, {"label": "Removing a disc safely with the lock button", "url": "https://www.youtube.com/shorts/zA3gIH8QTA0", "kind": "video"}, {"label": "More videos: angle grinder disc change", "url": "https://www.youtube.com/results?search_query=angle+grinder+disc+change+flange+spanner", "kind": "search"}],
-    photoSteps: [{"src": "img/step1.webp", "cap": "Unplug first. The old disc still mounted — this is where you start."}, {"src": "img/step2.webp", "cap": "Press and hold the spindle lock, then seat the pin spanner in the two holes of the nut."}, {"src": "img/step3.webp", "cap": "Turn the spanner against the disc's running direction. Crack it loose, then spin the nut off by hand."}, {"src": "img/step4.webp", "cap": "Old disc off. The inner flange stays on the spindle shoulder — check it is seated flat and not burred."}, {"src": "img/step5.webp", "cap": "New disc on, label facing out. Read the label first: it must say 6600 RPM or higher."}, {"src": "img/step6.webp", "cap": "Outer flange, then the nut, threaded on by hand until snug."}, {"src": "img/step7.webp", "cap": "Spindle lock pressed, one firm pull on the spanner. Tight — not violent. Done."}],
+    videos: [{"label": "Changing an angle grinder disc, step by step", "url": "https://www.youtube.com/watch?v=YPy6U3ERZ9w", "kind": "video"}, {"label": "Removing a disc safely with the lock button", "url": "https://www.youtube.com/shorts/zA3gIH8QTA0", "kind": "video"}, {"label": "More videos: angle grinder disc change", "url": "https://www.youtube.com/results?search_query=angle+grinder+disc+change+flange+spanner", "kind": "search"}],
     sketch: "flangeExploded",    symptom: "Am I using the right disc?",
     plain: "Cutting disc, grinding wheel. They are not the same.",
     severity: "stop-using",
@@ -484,7 +483,7 @@ const SYMPTOMS = [
   {
     id: "grinder-noise",
     toolId: "grinder-lica-asm08-230",
-    videos: [{"label": "More videos: grinder bearing and gearbox repair", "url": "https://www.youtube.com/results?search_query=angle+grinder+bearing+gearbox+noise+repair", "kind": "search"}],
+    videos: [{"label": "3D animation: inside an angle grinder (gears, armature, fan)", "url": "https://www.youtube.com/watch?v=XmKWRtqBKlc", "kind": "video"},{"label": "More videos: grinder bearing and gearbox repair", "url": "https://www.youtube.com/results?search_query=angle+grinder+bearing+gearbox+noise+repair", "kind": "search"}],
     symptom: "Screeching, grinding or rattling noise",
     plain: "It sounds wrong, disc or no disc.",
     severity: "stop-using",
