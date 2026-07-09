@@ -1,11 +1,13 @@
-const CACHE = 'toolfix-v10';
+const CACHE = 'toolfix-v11';
 const ASSETS = [
   './', './index.html', './data.js', './manifest.json',
   './img/drill.webp', './img/drill-plate.webp',
   './img/grinder-disc.webp', './img/grinder-plate.webp',
   './img/welder.webp',
   './img/disc-label.webp',
-  './sketches.js'
+  './sketches.js',
+  './img/step1.webp','./img/step2.webp','./img/step3.webp',
+  './img/step4.webp','./img/step5.webp','./img/step6.webp','./img/step7.webp'
 ];
 
 self.addEventListener('install', e => {
