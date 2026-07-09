@@ -37,14 +37,15 @@ const TOOLS = [
       "Rim speed at full disc": "79.5 m/s"
     },
     photos: [
+      { src: "img/disc-label.webp", cap: "The disc says MAX RPM 6600 and 80 m/s. The grinder says 6600 r/min. They match. This is what a correctly chosen disc looks like — check every new one against the machine." },
       { src: "img/grinder-plate.webp", cap: "\u00d8230mm. n\u2080 6600 r/min. M14 spindle. The 6600 is the number every disc must be rated to match or exceed." },
       { src: "img/grinder-disc.webp", cap: "The gap between disc and guard is the wear. The guard is sized for a full 230 mm disc \u2014 this one is well short of it." }
     ],
     notes: "The 6600 rpm on the plate is not arbitrary. A full 230 mm disc turning at 6600 rpm has a rim speed of 79.5 m/s, just under the 80 m/s limit for bonded abrasive. That number is the entire safety margin of this tool.",
     safety: {
       title: "Every disc must be rated 6600 rpm or higher",
-      body: "Read the rpm printed on the disc label before fitting it. If the disc's maximum speed is lower than 6600 rpm, it will burst. A 230 mm disc rated 6600 rpm fitted to a small 125 mm grinder running 11000 rpm reaches 132 m/s — nearly twice the safe limit. The fragments leave at the speed of a bullet.",
-      rule: "Guard on. Guard tight. Guard between the disc and your body. A 9-inch grinder without its guard is the most dangerous tool in this workshop."
+      body: "Read the rpm printed on the disc before fitting it. The Winone disc in the workshop says MAX RPM 6600 and 80 m/s — it matches this machine exactly. A disc rated below 6600 rpm will burst on this grinder. A 230 mm disc fitted to a small 125 mm machine running 11000 rpm reaches 132 m/s, nearly twice the safe limit, and the fragments leave at the speed of a bullet.",
+      rule: "Guard on. Guard tight. Guard between the disc and your body. The disc itself says USE A SAFETY GUARD. A 9-inch grinder without one is the most dangerous tool in this workshop."
     }
   },
   {
@@ -412,6 +413,65 @@ const SYMPTOMS = [
   },
 
   // ─────────────────────────────────────────────────────────────
+  {
+    id: "grinder-wrong-disc",
+    toolId: "grinder-lica-asm08-230",
+    symptom: "Am I using the right disc?",
+    plain: "Cutting disc, grinding wheel. They are not the same.",
+    severity: "stop-using",
+    firstCheck: {
+      title: "Look at the thickness and the centre",
+      body: "A cutting disc is thin and flat. A grinding wheel is thick with a raised, depressed centre. They do different jobs and they are not interchangeable. Using one for the other feels exactly like a weak grinder \u2014 and one of the two mistakes will get somebody hurt.",
+      table: {
+        head: ["Disc", "Thickness", "Use it"],
+        rows: [
+          ["Cutting (A30TBF)", "3 mm, flat", "Edge-on, to part metal"],
+          ["Grinding", "6 mm, raised centre", "Flat, shallow angle, to remove metal"]
+        ]
+      },
+      after: "The Winone disc in the workshop is A30TBF, 230\u00d73\u00d722.23 \u2014 a cutting disc. If it is mounted and someone is grinding flat with it, that is the fault.",
+      action: "Never grind flat with a cutting disc. 3 mm has almost no sideways strength. It will shatter."
+    },
+    causes: [
+      {
+        cause: "Cutting disc used flat for grinding",
+        likelihood: "common",
+        check: "Thin disc, held at an angle, sparks flying from the face rather than the edge. Look for a disc worn unevenly or with chips out of the rim.",
+        fix: "Stop. Fit a grinding wheel. A cutting disc loaded sideways breaks, and it breaks at 6600 rpm.",
+        difficulty: "field",
+        parts: ["Grinding wheel, 230 mm, rated \u2265 6600 rpm"]
+      },
+      {
+        cause: "Grinding wheel used edge-on to cut",
+        likelihood: "common",
+        check: "Thick disc with a raised centre, being used to part steel. It cuts slowly and feels gutless.",
+        fix: "Not dangerous, just wrong and slow. Fit a cutting disc.",
+        difficulty: "field",
+        parts: ["Cutting disc, 230\u00d73\u00d722.23, rated \u2265 6600 rpm"]
+      },
+      {
+        cause: "Disc rated below 6600 rpm",
+        likelihood: "occasional",
+        check: "Read the label. Every disc prints its maximum rpm. The Winone says 6600 and 80 m/s.",
+        fix: "Do not fit it. A disc spun past its rated speed bursts. There is no version of this that is worth the saving.",
+        difficulty: "field",
+        parts: []
+      },
+      {
+        cause: "Flanges wrong way round or missing",
+        likelihood: "occasional",
+        check: "Inner flange seats on the spindle shoulder, then disc, then outer flange, then nut. A depressed-centre wheel and a flat cutting disc sit differently.",
+        fix: "Refit correctly. A disc clamped on a burred or dished flange runs out of true and can crack.",
+        difficulty: "field",
+        parts: []
+      }
+    ],
+    warning: {
+      title: "A 9-inch disc bursting is not a small event",
+      body: "At 6600 rpm the rim moves at 80 metres per second. A fragment leaving that disc travels faster than most air rifle pellets, and there is no guard on earth that catches all of it.",
+      rule: "Right disc. Right rpm. Guard on. Stand out of the plane of the disc, never in line with it."
+    }
+  },
   {
     id: "grinder-noise",
     toolId: "grinder-lica-asm08-230",
