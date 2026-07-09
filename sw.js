@@ -1,4 +1,4 @@
-const CACHE = 'toolfix-v3';
+const CACHE = 'toolfix-v4';
 const ASSETS = [
   './', './index.html', './data.js', './manifest.json',
   './img/drill.webp', './img/drill-plate.webp',
