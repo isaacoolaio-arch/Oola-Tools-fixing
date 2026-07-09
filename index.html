@@ -175,7 +175,8 @@ th{
   text-transform:uppercase;color:var(--steel);
   padding:0 0 8px;border-bottom:1px solid var(--line);
 }
-th:last-child,td:last-child{text-align:right}
+th:not(:first-child),td:not(:first-child){text-align:right}
+td:first-child{font-family:var(--f-body);font-weight:500}
 td{padding:10px 0;border-bottom:1px solid var(--line);font-family:var(--f-mono);font-size:13.5px}
 
 /* ── Disambiguate ──────────────────────── */
@@ -338,6 +339,11 @@ function toolView(id){
         </div>`).join('')}
     </dl>
     ${t.notes ? `<div class="note">${esc(t.notes)}</div>` : ''}
+    ${t.safety ? `<div class="panel danger">
+      <h3>${esc(t.safety.title)}</h3>
+      <p>${esc(t.safety.body)}</p>
+      <p class="rule">${esc(t.safety.rule)}</p>
+    </div>` : ''}
     <div class="eyebrow" style="margin-top:30px">What goes wrong</div>
     <div class="sym-list">
       ${syms.map(s => `<button class="sym" data-sym="${s.id}">
