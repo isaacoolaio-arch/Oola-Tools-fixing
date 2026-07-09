@@ -298,6 +298,23 @@ td{padding:10px 0;border-bottom:1px solid var(--line);font-family:var(--f-mono);
   color:var(--steel);flex-shrink:0;
 }
 
+/* ── Offline saved clips ─────────────── */
+.ovid{margin-bottom:10px;background:var(--ink);padding:8px 8px 6px}
+.ovid video{width:100%;display:block;background:#000;max-height:60vh}
+.ovid-row{display:flex;align-items:center;gap:10px;padding:8px 4px 2px}
+.ovid-name{flex:1;font:500 12px/1.3 var(--f-body);color:var(--paper);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ovid-size{font:500 9px/1 var(--f-mono);letter-spacing:.1em;color:var(--arc);flex-shrink:0}
+.ovid-del{background:none;border:1px solid rgba(239,234,226,.3);color:var(--steel);font:500 10px/1 var(--f-mono);letter-spacing:.06em;padding:5px 9px;cursor:pointer;flex-shrink:0}
+.ovid-err{padding:14px 12px;color:var(--paper);font:500 13px/1.5 var(--f-body);background:var(--stop)}
+.ovid-add{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  border:1.5px dashed rgba(23,20,18,.35);color:var(--ink-2);
+  padding:13px;font:600 13px/1 var(--f-body);cursor:pointer;margin-bottom:10px;
+  background:var(--paper-2);
+}
+.ovid-add:active{background:var(--paper)}
+.ovid-total{font:500 9px/1 var(--f-mono);letter-spacing:.1em;color:var(--steel);margin:2px 0 10px}
+
 footer{
   padding:26px 18px;text-align:center;
   font:400 11px/1.6 var(--f-mono);color:var(--steel);
@@ -355,6 +372,7 @@ function pop(){
 back.onclick = pop;
 
 function render(){
+  if(typeof _ovidUrls !== 'undefined'){ _ovidUrls.forEach(u => URL.revokeObjectURL(u)); _ovidUrls = []; }
   const [view, arg] = stack[stack.length - 1];
   back.classList.toggle('on', stack.length > 1);
   main.innerHTML = ({home, tool: toolView, symptom: symView})[view](arg);
@@ -519,6 +537,7 @@ function symView(id){
 
   if(s.videos && s.videos.length){
     h += `<div class="vids"><div class="eyebrow">Watch it done</div>
+      <div class="ovids" data-ovids="${s.id}"></div>
       ${s.videos.map(v => `<a class="vid ${v.kind}" href="${esc(v.url)}" target="_blank" rel="noopener">
         <span class="vid-play">${v.kind==='search'?'⌕':'▶'}</span>
         <span class="vid-label">${esc(v.label)}</span>
@@ -537,8 +556,85 @@ function symView(id){
   return h;
 }
 
+// ── Offline saved clips (IndexedDB) ──
+let _ovidUrls = [];
+function vdb(){
+  if(vdb._p) return vdb._p;
+  vdb._p = new Promise((res, rej) => {
+    const r = indexedDB.open('toolfix-videos', 1);
+    r.onupgradeneeded = () => {
+      const st = r.result.createObjectStore('clips', {keyPath:'id', autoIncrement:true});
+      st.createIndex('sym', 'sym');
+    };
+    r.onsuccess = () => res(r.result);
+    r.onerror = () => rej(r.error);
+  });
+  return vdb._p;
+}
+const vAll = sym => vdb().then(d => new Promise((res, rej) => {
+  const q = d.transaction('clips').objectStore('clips').index('sym').getAll(sym);
+  q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error);
+}));
+const vAdd = rec => vdb().then(d => new Promise((res, rej) => {
+  const q = d.transaction('clips','readwrite').objectStore('clips').add(rec);
+  q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error);
+}));
+const vDel = id => vdb().then(d => new Promise((res, rej) => {
+  const q = d.transaction('clips','readwrite').objectStore('clips').delete(id);
+  q.onsuccess = () => res(); q.onerror = () => rej(q.error);
+}));
+const mb = n => (n/1048576).toFixed(1) + ' MB';
+
+async function hydrateOvids(box){
+  const sym = box.dataset.ovids;
+  let clips = [];
+  try{ clips = await vAll(sym); }catch(e){}
+  const total = clips.reduce((a,c) => a + (c.size||0), 0);
+  box.innerHTML = clips.map(c => {
+    const url = URL.createObjectURL(c.blob);
+    _ovidUrls.push(url);
+    return `<div class="ovid">
+      <video controls preload="metadata" playsinline src="${url}"></video>
+      <div class="ovid-row">
+        <span class="ovid-name">${esc(c.name || 'Saved clip')}</span>
+        <span class="ovid-size">${mb(c.size||0)} · OFFLINE</span>
+        <button class="ovid-del" data-del="${c.id}">REMOVE</button>
+      </div>
+    </div>`;
+  }).join('')
+  + (clips.length ? `<div class="ovid-total">${clips.length} CLIP${clips.length>1?'S':''} SAVED · ${mb(total)} ON THIS PHONE</div>` : '')
+  + `<label class="ovid-add">＋ Save a video on this phone
+      <input type="file" accept="video/mp4,video/webm,video/*" hidden></label>`;
+
+  box.querySelector('input[type=file]').onchange = async e => {
+    const f = e.target.files[0];
+    if(!f) return;
+    if(f.size > 250*1048576){
+      alert('That file is ' + mb(f.size) + ' — too big to store. Compress it first (360p or 480p is plenty for a repair clip).');
+      return;
+    }
+    try{ if(navigator.storage && navigator.storage.persist) navigator.storage.persist(); }catch(_){}
+    try{
+      await vAdd({sym, name:f.name, size:f.size, type:f.type, savedAt:Date.now(), blob:f});
+    }catch(err){
+      alert('Could not save — the phone may be out of storage space.');
+      return;
+    }
+    hydrateOvids(box);
+  };
+  box.querySelectorAll('[data-del]').forEach(b => b.onclick = async () => {
+    if(!confirm('Remove this saved video from the phone?')) return;
+    await vDel(Number(b.dataset.del));
+    hydrateOvids(box);
+  });
+  box.querySelectorAll('video').forEach(v => v.onerror = () => {
+    v.outerHTML = '<div class="ovid-err">This video is in a format this phone cannot play (often HEVC/H.265). Convert it to H.264 MP4 — the oola-convert.bat script does this — then save it again.</div>';
+  });
+}
+
 // ── Bind ──
 function bind(){
+  main.querySelectorAll('[data-ovids]').forEach(hydrateOvids);
   main.querySelectorAll('[data-tool]').forEach(b =>
     b.onclick = () => go('tool', b.dataset.tool));
   main.querySelectorAll('[data-sym]').forEach(b =>
