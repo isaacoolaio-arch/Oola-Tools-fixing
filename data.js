@@ -79,8 +79,13 @@ const SYMPTOMS = [
     severity: "caution",
     gate: null,
     firstCheck: {
+      title: "Push the reverse lever all the way over",
+      body: "Makita's own manual says it: if the trigger will not depress, check the reversing switch is fully set to the A side or the B side. It is a mechanical interlock. A lever stopped halfway locks the trigger, and it feels exactly like a dead reverse. Push it hard until it clicks home.",
+      action: "Thirty seconds. Do this before anything else."
+    },
+    secondCheck: {
       title: "What the fault already tells you",
-      body: "The drill turns. That proves the motor, the brushes, the cord and the chuck are all doing their job. Whatever is wrong is inside the reversing mechanism only. Do not look anywhere else."
+      body: "The drill turns forward. That proves the motor, the brushes, the cord and the chuck are all doing their job. Whatever is wrong sits in the reversing mechanism alone. Do not look anywhere else."
     },
     causes: [
       {
@@ -97,7 +102,7 @@ const SYMPTOMS = [
         check: "Unplug. Open the handle. Test continuity across the switch terminals with the lever in each position. Forward should read closed, reverse open.",
         fix: "Replace the trigger switch module. On the HP1630 this is one part, four screws, two spade connectors.",
         difficulty: "workshop",
-        parts: ["Makita HP1630 trigger switch assembly"]
+        parts: ["Switch DGQ-1104H \u2014 Makita part 650586-0"]
       },
       {
         cause: "Brushes worn unevenly",
@@ -105,7 +110,7 @@ const SYMPTOMS = [
         check: "Unplug. Remove both brush caps. Compare the two brushes — a brush worn to a slant, or worn to under 6 mm, is finished.",
         fix: "Replace both brushes as a pair, never one. Then clean the switch, because the dust that wore them is inside it.",
         difficulty: "workshop",
-        parts: ["Makita CB-411 carbon brushes (pair)"]
+        parts: ["Carbon brush CB-85 \u2014 Makita part 191998-3 (order 2)"]
       },
       {
         cause: "Motor winding fault",
@@ -319,5 +324,277 @@ const SYMPTOMS = [
       body: "This is an IGBT inverter. Its capacitors hold a lethal charge after it is unplugged — for minutes, sometimes longer. It carries no brand, no manual, and no support, so nobody can tell you how long is long enough. People have died opening machines like this.",
       rule: "Every check above is done from outside the case. If the fault survives all of them, the answer is a qualified electrician. There is no next step here for you, for Kennedy, or for Kilama."
     }
+  },
+  // ─────────────────────────────────────────────────────────────
+  // Faults common to any brushed tool. Drill and grinder both.
+  // ─────────────────────────────────────────────────────────────
+  {
+    id: "drill-sparking",
+    toolId: "drill-makita-hp1630",
+    symptom: "Sparks from the motor vents",
+    plain: "You can see flashes inside when it runs.",
+    severity: "caution",
+    normalOperation: {
+      title: "Some sparking is normal",
+      body: "Sparks come from the carbon brushes rubbing on the spinning commutator. That contact is how current reaches the motor. A brushed tool sparks a little, always, and has done since 2008.",
+      why: "What matters is how much. Faint, steady, even sparking is the tool working. Bright flashing, sparks that ring right around the commutator, smoke, or a burning smell is not."
+    },
+    firstCheck: {
+      title: "Which kind of sparking is it?",
+      body: "Run the drill in a dim corner with no load. Look through the vents. Faint and even — carry on working. Bright, flashing, or smoking — unplug it now and read on.",
+      action: "Smoke or a burning smell: stop. Do not finish the job."
+    },
+    causes: [
+      {
+        cause: "Brushes worn short",
+        likelihood: "common",
+        check: "Unplug. Remove both brush caps. A brush under about 6 mm, worn at a slant, or with a weak spring behind it, is finished. Look at the copper commutator too: bright is good, blackened and grooved is not.",
+        fix: "Replace both brushes. Never one. The worn one tells you the other is nearly there.",
+        difficulty: "workshop",
+        parts: ["Carbon brush CB-85 — Makita part 191998-3 (order 2)"]
+      },
+      {
+        cause: "Commutator damaged by running on worn brushes",
+        likelihood: "occasional",
+        check: "Blackened segments with visible grooves. This is what happens when brushes are run past the end of their life.",
+        fix: "Light clean with fine abrasive paper, armature turned by hand. Deep grooves mean the armature is done — and an armature costs many times what a pair of brushes costs. That is the whole argument for changing brushes early.",
+        difficulty: "workshop",
+        parts: ["Armature assembly 240V — Makita part 515309-2"]
+      },
+      {
+        cause: "Armature winding shorted",
+        likelihood: "rare",
+        check: "Heavy sparking that continues with new brushes. Smell of hot varnish.",
+        fix: "Armature replacement. On an eighteen-year-old drill, price it against a new tool first.",
+        difficulty: "workshop",
+        parts: ["Armature assembly 240V — Makita part 515309-2"]
+      }
+    ]
+  },
+
+  {
+    id: "drill-chuck-slips",
+    toolId: "drill-makita-hp1630",
+    symptom: "Bit slips or falls out of the chuck",
+    plain: "The drill turns but the bit does not.",
+    severity: "caution",
+    firstCheck: {
+      title: "Tighten all three holes, not one",
+      body: "The HP1630 has a keyed chuck. Makita's manual is specific: place the chuck key in each of the three holes and tighten each one. Most people tighten one hole and stop. That grips on one jaw and the bit slips under load.",
+      action: "Three holes. Every time."
+    },
+    causes: [
+      {
+        cause: "Only one hole tightened",
+        likelihood: "common",
+        check: "Ask whoever last fitted the bit how many holes they used.",
+        fix: "Tighten all three, evenly. This is technique, not a fault.",
+        difficulty: "field",
+        parts: []
+      },
+      {
+        cause: "Chuck jaws worn or full of dust",
+        likelihood: "common",
+        check: "Open the chuck fully. Look into the jaws. Concrete dust packs in and stops them closing square.",
+        fix: "Blow out with compressed air. A drop of light oil on the jaw threads. If the jaws are rounded or chipped, replace the chuck.",
+        difficulty: "field",
+        parts: ["Drill chuck S13 — Makita part 763161-4"]
+      },
+      {
+        cause: "Bit shank chewed",
+        likelihood: "occasional",
+        check: "Look at the bit, not the drill. A shank already scored by slipping will keep slipping.",
+        fix: "Replace the bit. Then tighten three holes.",
+        difficulty: "field",
+        parts: []
+      }
+    ]
+  },
+
+  // ─────────────────────────────────────────────────────────────
+  {
+    id: "grinder-noise",
+    toolId: "grinder-lica-asm08-230",
+    symptom: "Screeching, grinding or rattling noise",
+    plain: "It sounds wrong, disc or no disc.",
+    severity: "stop-using",
+    firstCheck: {
+      title: "Take the disc off first",
+      body: "Unplug. Remove the disc. Spin the spindle by hand. A good spindle turns freely, quietly, with no grit and no side-to-side play. If the noise is gone with the disc off, the disc or its flanges are the problem, not the grinder.",
+      action: "A screeching 230 mm grinder with a disc fitted is not something to keep testing. Disc off, then diagnose."
+    },
+    causes: [
+      {
+        cause: "Bearing worn",
+        likelihood: "common",
+        check: "Spin the spindle by hand. Rumbling, growling, roughness, or any play means a bearing. Grinding dust is what kills them: it gets past the seals and behaves like lapping paste.",
+        fix: "Replace with a sealed bearing of the correct size. Take the old one to the shop. Grease it lightly before fitting.",
+        difficulty: "workshop",
+        parts: ["Sealed spindle bearing — measure the old one"]
+      },
+      {
+        cause: "Gearbox grease dried out or contaminated",
+        likelihood: "common",
+        check: "Metal-on-metal grinding from the head that changes with speed. On a grinder used daily in a dusty garage, the grease is old.",
+        fix: "Open the gear head. Clean out the old grease. Repack with fresh high-temperature grease made for power tool gearboxes. Do this yearly.",
+        difficulty: "workshop",
+        parts: ["High-temperature gearbox grease"]
+      },
+      {
+        cause: "Bevel gear teeth chipped",
+        likelihood: "occasional",
+        check: "Rattling or knocking rather than a smooth growl. Inspect the teeth once the head is open.",
+        fix: "Replace the gear pair. Never one gear alone — they wear as a matched set.",
+        difficulty: "workshop",
+        parts: []
+      },
+      {
+        cause: "Disc mounted wrong or flanges damaged",
+        likelihood: "common",
+        check: "Noise vanishes with the disc removed. Look at the inner and outer flanges: burred, dished, or the wrong way round.",
+        fix: "Refit correctly. Inner flange seats on the spindle shoulder, disc, then outer flange. Replace burred flanges.",
+        difficulty: "field",
+        parts: []
+      }
+    ]
+  },
+
+  {
+    id: "grinder-hot",
+    toolId: "grinder-lica-asm08-230",
+    symptom: "Gets too hot to hold",
+    plain: "Five minutes of work and you cannot touch it.",
+    severity: "caution",
+    firstCheck: {
+      title: "Look at the vents",
+      body: "This grinder lives in a garage that makes metal dust for a living. Dust packs into the vents, blankets the motor, and stops it cooling. Heat then kills the insulation, the bearings and the windings — slowly, so nobody notices until it dies.",
+      action: "Unplug. Blow the vents out with compressed air after every heavy day. It takes a minute and it is the single best thing you can do for this tool."
+    },
+    causes: [
+      {
+        cause: "Vents blocked with grinding dust",
+        likelihood: "common",
+        check: "Look into the vents front and back.",
+        fix: "Compressed air, unplugged. Then do it regularly, not once.",
+        difficulty: "field",
+        parts: []
+      },
+      {
+        cause: "Pushing too hard",
+        likelihood: "common",
+        check: "Are you leaning on it? A grinder cuts with speed, not force. Pressing harder makes the motor draw more current, heat up, and wear the brushes faster — and it cuts no quicker.",
+        fix: "Let the disc do the work. If it will not cut at light pressure, the disc is worn. Change it.",
+        difficulty: "field",
+        parts: []
+      },
+      {
+        cause: "Bearing dragging",
+        likelihood: "occasional",
+        check: "Spin the spindle by hand, disc off. Resistance means friction, and friction means heat.",
+        fix: "Replace the bearing.",
+        difficulty: "workshop",
+        parts: ["Sealed spindle bearing — measure the old one"]
+      },
+      {
+        cause: "Gearbox grease gone",
+        likelihood: "occasional",
+        check: "Head noticeably hotter than the motor body.",
+        fix: "Repack the gear head.",
+        difficulty: "workshop",
+        parts: ["High-temperature gearbox grease"]
+      }
+    ]
+  },
+
+  // ─────────────────────────────────────────────────────────────
+  {
+    id: "welder-rod-sticks",
+    toolId: "welder-mma-650s",
+    symptom: "Rod sticks to the work every time",
+    plain: "You strike, it welds itself to the plate, you wrench it off.",
+    severity: "safe",
+    normalOperation: {
+      title: "This is almost never the machine",
+      body: "Sticking is a setup problem, not a fault. The rod must touch the work to start the arc — there is no voltage on earth that jumps an air gap at 40 V. If the current is too low, or the return path is poor, the rod fuses to the plate before the arc gets going.",
+      why: "Small inverters make this worse. This machine's open-circuit voltage is 40 V, which is modest. It needs a clean circuit and enough current to strike reliably."
+    },
+    firstCheck: {
+      title: "The earth clamp, first and always",
+      body: "Clamp it to bare, clean metal. Not paint. Not rust. Not mill scale. Not the workbench. Wire-brush a patch and clamp to that. A clamp caked in rust looks fine and blocks the circuit completely. This is the most common cause and it costs nothing to fix.",
+      action: "If you can only weld with the earth clamped inches from the rod, the earth path is bad. That is the whole diagnosis."
+    },
+    causes: [
+      {
+        cause: "Earth clamp on paint, rust, or scale",
+        likelihood: "common",
+        check: "Look at where the clamp bites. Wire-brush a patch of bare metal and clamp there.",
+        fix: "Clean metal, tight clamp. Check the clamp's own jaws and its cable lug for corrosion.",
+        difficulty: "field",
+        parts: []
+      },
+      {
+        cause: "Current set too low",
+        likelihood: "common",
+        check: "Dial numbers on this machine mean nothing. Match the rod: 2.5 mm wants 70–90 A, 3.2 mm wants 110–140 A. Too cold and the rod sticks.",
+        fix: "Turn it up in small steps until the arc runs clean and steady. Mark that dial position with paint.",
+        difficulty: "field",
+        parts: []
+      },
+      {
+        cause: "Damp or damaged rods",
+        likelihood: "common",
+        check: "Gulu is humid. Rods left in the open absorb moisture. Chipped or missing flux at the tip will not strike.",
+        fix: "Store rods dry and sealed. Grind or snap off a chipped tip. Damp rods also cause porosity in the weld.",
+        difficulty: "field",
+        parts: []
+      },
+      {
+        cause: "Technique — holding the rod down",
+        likelihood: "common",
+        check: "Scratch like striking a match, then lift immediately to a short arc about the thickness of the rod core. Do not press and hold.",
+        fix: "Practice on scrap. Do not twist a stuck rod until the flux breaks off — break the arc, free it, chip the end clean, restart on clean steel.",
+        difficulty: "field",
+        parts: []
+      },
+      {
+        cause: "Polarity reversed",
+        likelihood: "occasional",
+        check: "The machine has + and − terminals on the front. Most rods want the holder on + and the earth on −. Check the rod box.",
+        fix: "Swap the leads. Wrong polarity gives instability, spatter and poor penetration.",
+        difficulty: "field",
+        parts: []
+      },
+      {
+        cause: "Mains voltage sagging",
+        likelihood: "occasional",
+        check: "Does it strike at some hours and not others? On a long lead? The machine holds enough to strike, then runs out, and the rod sticks.",
+        fix: "Short thick lead, socket near the board. Nothing wrong with the welder.",
+        difficulty: "field",
+        parts: []
+      }
+    ]
+  },
+
+  {
+    id: "welder-knobs",
+    toolId: "welder-mma-650s",
+    symptom: "What do the three knobs actually do?",
+    plain: "Current, Arc Force, Hot Start. Nobody set them.",
+    severity: "safe",
+    firstCheck: {
+      title: "Three knobs, three jobs",
+      body: "Most people in most garages turn Current and ignore the other two. They are not decoration, and on a machine with a dishonest display they matter more, not less.",
+      table: {
+        head: ["Knob", "What it does", "Where to set it"],
+        rows: [
+          ["Current", "How much heat the arc makes", "By rod size, not by the number"],
+          ["Arc Force", "Kicks current up when the rod nears the plate, stopping it sticking", "Low-mid. Raise if the rod keeps sticking"],
+          ["Hot Start", "Extra current for a moment at strike, so the arc lights", "Mid. Raise if it is hard to start"]
+        ]
+      },
+      after: "Arc Force and Hot Start exist to cure exactly the sticking problem above. If a rod sticks, turn Arc Force up before you blame the machine.",
+      calibrate: "Set Current by rod. Then adjust Arc Force until the rod stops sticking when you push in close. Then adjust Hot Start until the arc lights on the first scratch. Mark all three with paint once they are right."
+    },
+    causes: []
   }
 ];
