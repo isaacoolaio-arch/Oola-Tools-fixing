@@ -20,17 +20,24 @@ const TOOLS = [
     notes: "Genuine Makita. Parts still available. At this age, brushes and switch are the wear items — and they are connected: carbon dust from worn brushes fouls the switch contacts, and the reverse contacts foul first."
   },
   {
-    id: "grinder-generic-180",
-    name: "Angle Grinder (unbranded)",
-    type: "Angle Grinder, 180 mm",
-    brandKnown: false,
+    id: "grinder-lica-asm08-230",
+    name: "LICA ASM08-230",
+    type: "Angle Grinder, 230 mm",
+    brandKnown: true,
     specs: {
-      "Disc size": "180 mm (7 in) nominal",
-      "Brand": "Not marked",
-      "Manual": "None available",
-      "Spare parts": "Generic / local only"
+      "Disc size": "230 mm (9 in)",
+      "Spindle speed": "6600 rpm",
+      "Spindle thread": "M14",
+      "Supply": "228–240 V, 50/60 Hz",
+      "Maker": "Jiangsu Dongcheng M&E Tools",
+      "Rim speed at full disc": "79.5 m/s"
     },
-    notes: "No brand marking anywhere on the body. When it genuinely fails, there is no parts channel and no manual — the path is local repair or replacement. Record this in the tool register before budgeting for it."
+    notes: "The 6600 rpm on the plate is not arbitrary. A full 230 mm disc turning at 6600 rpm has a rim speed of 79.5 m/s, just under the 80 m/s limit for bonded abrasive. That number is the entire safety margin of this tool.",
+    safety: {
+      title: "Every disc must be rated 6600 rpm or higher",
+      body: "Read the rpm printed on the disc label before fitting it. If the disc's maximum speed is lower than 6600 rpm, it will burst. A 230 mm disc rated 6600 rpm fitted to a small 125 mm grinder running 11000 rpm reaches 132 m/s — nearly twice the safe limit. The fragments leave at the speed of a bullet.",
+      rule: "Guard on. Guard tight. Guard between the disc and your body. A 9-inch grinder without its guard is the most dangerous tool in this workshop."
+    }
   },
   {
     id: "welder-mma-650s",
@@ -103,15 +110,25 @@ const SYMPTOMS = [
   // ─────────────────────────────────────────────────────────────
   {
     id: "grinder-weak",
-    toolId: "grinder-generic-180",
+    toolId: "grinder-lica-asm08-230",
     symptom: "Grinder feels weak",
     plain: "It runs, but it does not cut the way it used to.",
     severity: "safe",
     gate: null,
     firstCheck: {
       title: "Measure the disc before you touch the grinder",
-      body: "A worn disc is the most common cause of a 'weak' grinder anywhere in the world, and there is nothing wrong with the machine. The disc turns at the same rpm no matter how small it gets — but cutting speed depends on the rim speed, and the rim speed falls with the diameter. A 180 mm disc worn down to 150 mm has lost about 17% of its cutting speed. Worn to 130 mm, it has lost nearly 30%. It will feel tired. It is not.",
-      action: "Measure the disc across its full width. If it is more than about 20 mm under its marked size, fit a new one and try again before reading any further."
+      body: "This is a 230 mm machine turning at 6600 rpm. Cutting depends on rim speed, and rim speed falls as the disc wears down. The disc keeps turning at 6600 rpm no matter how small it gets — but a smaller circle covers less distance per turn.",
+      table: {
+        head: ["Disc now", "Rim speed", "Cutting power"],
+        rows: [
+          ["230 mm (new)", "79.5 m/s", "100%"],
+          ["200 mm", "69.1 m/s", "87%"],
+          ["180 mm", "62.2 m/s", "78%"],
+          ["150 mm", "51.8 m/s", "65%"]
+        ]
+      },
+      after: "At 180 mm you have lost about a fifth of your cutting speed. At 150 mm you have lost a third. Nothing is wrong with the grinder. The disc is finished.",
+      action: "Measure across the full width of the disc. Under about 200 mm, fit a new one and try again before reading further."
     },
     disambiguate: {
       question: "With no load — nothing touching the disc — how does it sound and spin?",
@@ -131,7 +148,7 @@ const SYMPTOMS = [
 
   {
     id: "grinder-bogs-under-load",
-    toolId: "grinder-generic-180",
+    toolId: "grinder-lica-asm08-230",
     symptom: "Spins normally, bogs down under load",
     plain: "Full speed in the air. Dies the moment it meets steel.",
     severity: "safe",
@@ -146,9 +163,9 @@ const SYMPTOMS = [
         cause: "Carbon brushes worn",
         likelihood: "common",
         check: "Unplug. Remove the brush caps on either side of the motor housing. A brush shorter than about 6 mm, or one that no longer sits square against the commutator, is done. In a garage that grinds daily, brushes are a consumable — expect to replace them yearly.",
-        fix: "Replace both as a pair. Match the original dimensions; on an unbranded tool, take the old brush to the shop rather than guessing.",
+        fix: "Replace both as a pair. LICA is made by Dongcheng — ask for ASM08-230 brushes, or take the old ones to the shop and match the dimensions.",
         difficulty: "workshop",
-        parts: ["Carbon brushes — measure old ones, no part number available"]
+        parts: ["Carbon brushes — LICA ASM08-230 / Dongcheng"]
       },
       {
         cause: "Mains voltage sagging",
@@ -162,7 +179,7 @@ const SYMPTOMS = [
         cause: "Commutator glazed or scored",
         likelihood: "occasional",
         check: "With brushes out, look at the copper commutator. It should be bright. Black, glazed, or grooved means poor contact.",
-        fix: "Clean lightly with fine abrasive paper, turning the armature by hand. Deep grooves need an armature replacement — on an unbranded tool, that usually means a new grinder.",
+        fix: "Clean lightly with fine abrasive paper, turning the armature by hand. Deep grooves need an armature replacement — Dongcheng parts exist, but price them against a new grinder first.",
         difficulty: "workshop",
         parts: []
       },
@@ -170,8 +187,8 @@ const SYMPTOMS = [
         cause: "Armature or field winding failing",
         likelihood: "rare",
         check: "Smells hot. Runs hotter than usual for the work done. Only consider after brushes and supply are ruled out.",
-        fix: "No parts channel for this tool. Replace the grinder.",
-        difficulty: "replace-tool",
+        fix: "Armature or field replacement. On a machine this worn, price the parts against a new grinder before committing.",
+        difficulty: "workshop",
         parts: []
       }
     ]
@@ -179,7 +196,7 @@ const SYMPTOMS = [
 
   {
     id: "grinder-slow-freerunning",
-    toolId: "grinder-generic-180",
+    toolId: "grinder-lica-asm08-230",
     symptom: "Slow even with nothing touching it",
     plain: "It never reaches full speed, load or no load.",
     severity: "caution",
@@ -204,7 +221,7 @@ const SYMPTOMS = [
         check: "Unplug. Remove the disc. Spin the spindle by hand. It should turn freely and quietly. Grit, roughness, or resistance means a bearing.",
         fix: "Replace the bearing. Standard sizes; take the old one to the shop.",
         difficulty: "workshop",
-        parts: ["Spindle bearing — measure the old one"]
+        parts: ["Spindle bearing — M14 spindle, measure the old one"]
       },
       {
         cause: "Gear damage",
