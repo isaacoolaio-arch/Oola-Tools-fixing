@@ -275,6 +275,29 @@ td{padding:10px 0;border-bottom:1px solid var(--line);font-family:var(--f-mono);
   font:500 13.5px/1.6 var(--f-body);color:var(--stop);
 }
 
+/* ── Videos ────────────────────────────── */
+.vids{margin:26px 0}
+.vids .eyebrow{margin-bottom:12px}
+.vid{
+  display:flex;align-items:center;gap:12px;
+  background:var(--ink);color:var(--paper);
+  padding:14px 16px;margin-bottom:2px;
+  text-decoration:none;transition:background .12s;
+}
+.vid:hover{background:var(--ink-2)}
+.vid-play{
+  flex-shrink:0;width:28px;height:28px;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--arc);color:var(--ink);
+  font-size:12px;
+}
+.vid.search .vid-play{background:var(--steel)}
+.vid-label{flex:1;font:500 14px/1.4 var(--f-body)}
+.vid-net{
+  font:500 9px/1 var(--f-mono);letter-spacing:.1em;
+  color:var(--steel);flex-shrink:0;
+}
+
 footer{
   padding:26px 18px;text-align:center;
   font:400 11px/1.6 var(--f-mono);color:var(--steel);
@@ -491,6 +514,16 @@ function symView(id){
           </div>
         </details>`;
       }).join('')}
+    </div>`;
+  }
+
+  if(s.videos && s.videos.length){
+    h += `<div class="vids"><div class="eyebrow">Watch it done</div>
+      ${s.videos.map(v => `<a class="vid ${v.kind}" href="${esc(v.url)}" target="_blank" rel="noopener">
+        <span class="vid-play">${v.kind==='search'?'⌕':'▶'}</span>
+        <span class="vid-label">${esc(v.label)}</span>
+        <span class="vid-net">NEEDS DATA</span>
+      </a>`).join('')}
     </div>`;
   }
 
