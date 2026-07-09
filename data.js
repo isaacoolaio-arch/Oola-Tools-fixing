@@ -17,6 +17,10 @@ const TOOLS = [
       "Capacity": "16 mm masonry, 13 mm steel",
       "Made": "December 2008"
     },
+    photos: [
+      { src: "img/drill.webp", cap: "Makita HP1630. Eighteen years old, genuine, and still worth repairing." },
+      { src: "img/drill-plate.webp", cap: "710 W, 220 V, 3.4 A, 0\u20133200 rpm. Made 2008.12. Everything on this plate is true." }
+    ],
     notes: "Genuine Makita. Parts still available. At this age, brushes and switch are the wear items — and they are connected: carbon dust from worn brushes fouls the switch contacts, and the reverse contacts foul first."
   },
   {
@@ -32,6 +36,10 @@ const TOOLS = [
       "Maker": "Jiangsu Dongcheng M&E Tools",
       "Rim speed at full disc": "79.5 m/s"
     },
+    photos: [
+      { src: "img/grinder-plate.webp", cap: "\u00d8230mm. n\u2080 6600 r/min. M14 spindle. The 6600 is the number every disc must be rated to match or exceed." },
+      { src: "img/grinder-disc.webp", cap: "The gap between disc and guard is the wear. The guard is sized for a full 230 mm disc \u2014 this one is well short of it." }
+    ],
     notes: "The 6600 rpm on the plate is not arbitrary. A full 230 mm disc turning at 6600 rpm has a rim speed of 79.5 m/s, just under the 80 m/s limit for bonded abrasive. That number is the entire safety margin of this tool.",
     safety: {
       title: "Every disc must be rated 6600 rpm or higher",
@@ -54,6 +62,9 @@ const TOOLS = [
       "Cooling": "Air",
       "Protection": "IP21S — keep dry, keep upright"
     },
+    photos: [
+      { src: "img/welder.webp", cap: "MMA-650S. The 650 is not amps this machine can deliver. The small red lamp between the two meters is O.C — the thermal cut-out." }
+    ],
     notes: "The nameplate is not honest. 220 V × 24 A = 5.3 kVA of input. At ~82% efficiency and ~24 V arc voltage, that is about 180 A of real output. It cannot produce 650 A; no 220 V single-phase socket can supply that. The dial numbers and the current meter do not correspond to the amps in the arc."
   }
 ];
