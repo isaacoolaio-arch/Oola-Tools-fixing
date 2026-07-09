@@ -401,6 +401,13 @@ function symView(id){
     </div>`;
   }
 
+  if(s.secondCheck){
+    h += `<div class="panel">
+      <h3>${esc(s.secondCheck.title)}</h3>
+      <p>${esc(s.secondCheck.body)}</p>
+    </div>`;
+  }
+
   if(s.disambiguate){
     h += `<div class="ask">
       <div class="ask-q">${esc(s.disambiguate.question)}</div>
