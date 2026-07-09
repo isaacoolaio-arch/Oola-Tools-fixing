@@ -128,6 +128,7 @@ const SYMPTOMS = [
   {
     id: "grinder-weak",
     toolId: "grinder-lica-asm08-230",
+    sketch: "discAnim",
     symptom: "Grinder feels weak",
     plain: "It runs, but it does not cut the way it used to.",
     severity: "safe",
@@ -416,7 +417,7 @@ const SYMPTOMS = [
   {
     id: "grinder-wrong-disc",
     toolId: "grinder-lica-asm08-230",
-    sketch: "flange",    symptom: "Am I using the right disc?",
+    sketch: "flangeAnim",    symptom: "Am I using the right disc?",
     plain: "Cutting disc, grinding wheel. They are not the same.",
     severity: "stop-using",
     firstCheck: {
