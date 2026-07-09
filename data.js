@@ -166,7 +166,7 @@ const SYMPTOMS = [
   {
     id: "grinder-bogs-under-load",
     toolId: "grinder-lica-asm08-230",
-    symptom: "Spins normally, bogs down under load",
+    sketch: "brush",    symptom: "Spins normally, bogs down under load",
     plain: "Full speed in the air. Dies the moment it meets steel.",
     severity: "safe",
     gate: null,
@@ -332,7 +332,7 @@ const SYMPTOMS = [
   {
     id: "drill-sparking",
     toolId: "drill-makita-hp1630",
-    symptom: "Sparks from the motor vents",
+    sketch: "brush",    symptom: "Sparks from the motor vents",
     plain: "You can see flashes inside when it runs.",
     severity: "caution",
     normalOperation: {
@@ -376,7 +376,7 @@ const SYMPTOMS = [
   {
     id: "drill-chuck-slips",
     toolId: "drill-makita-hp1630",
-    symptom: "Bit slips or falls out of the chuck",
+    sketch: "chuck",    symptom: "Bit slips or falls out of the chuck",
     plain: "The drill turns but the bit does not.",
     severity: "caution",
     firstCheck: {
@@ -416,7 +416,7 @@ const SYMPTOMS = [
   {
     id: "grinder-wrong-disc",
     toolId: "grinder-lica-asm08-230",
-    symptom: "Am I using the right disc?",
+    sketch: "flange",    symptom: "Am I using the right disc?",
     plain: "Cutting disc, grinding wheel. They are not the same.",
     severity: "stop-using",
     firstCheck: {
