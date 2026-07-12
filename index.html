@@ -670,7 +670,7 @@ function renderClips(sym){
         slot.innerHTML = `<video controls playsinline src="${url}"></video>`;
         b.textContent = 'Close';
         slot.querySelector('video').onerror = () => {
-          slot.innerHTML = '<div class="clip-err">This phone saved the video in a format Chrome cannot play (often HEVC). Re-record with the camera set to "most compatible", or convert it on the laptop with oola-convert.bat (in the tools folder of this app's site).</div>';
+          slot.innerHTML = '<div class="clip-err">This phone saved the video in a format Chrome cannot play (often HEVC). Re-record with the camera set to "most compatible", or convert it on the laptop with oola-convert.bat (in the tools folder of the app site).</div>';
         };
       });
     });
