@@ -298,22 +298,33 @@ td{padding:10px 0;border-bottom:1px solid var(--line);font-family:var(--f-mono);
   color:var(--steel);flex-shrink:0;
 }
 
-/* ── Offline saved clips ─────────────── */
-.ovid{margin-bottom:10px;background:var(--ink);padding:8px 8px 6px}
-.ovid video{width:100%;display:block;background:#000;max-height:60vh}
-.ovid-row{display:flex;align-items:center;gap:10px;padding:8px 4px 2px}
-.ovid-name{flex:1;font:500 12px/1.3 var(--f-body);color:var(--paper);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.ovid-size{font:500 9px/1 var(--f-mono);letter-spacing:.1em;color:var(--arc);flex-shrink:0}
-.ovid-del{background:none;border:1px solid rgba(239,234,226,.3);color:var(--steel);font:500 10px/1 var(--f-mono);letter-spacing:.06em;padding:5px 9px;cursor:pointer;flex-shrink:0}
-.ovid-err{padding:14px 12px;color:var(--paper);font:500 13px/1.5 var(--f-body);background:var(--stop)}
-.ovid-add{
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  border:1.5px dashed rgba(23,20,18,.35);color:var(--ink-2);
-  padding:13px;font:600 13px/1 var(--f-body);cursor:pointer;margin-bottom:10px;
-  background:var(--paper-2);
+/* ── Device clips ──────────────────────── */
+.clips{margin:26px 0}
+.clips .eyebrow{margin-bottom:12px}
+.clip{
+  background:#fff;border:1px solid var(--line);
+  padding:12px 14px;margin-bottom:2px;
 }
-.ovid-add:active{background:var(--paper)}
-.ovid-total{font:500 9px/1 var(--f-mono);letter-spacing:.1em;color:var(--steel);margin:2px 0 10px}
+.clip-row{display:flex;align-items:center;gap:12px}
+.clip-name{flex:1;font:500 14px/1.4 var(--f-body);word-break:break-all}
+.clip-size{font:400 11px/1 var(--f-mono);color:var(--steel);flex-shrink:0}
+.clip-btn{
+  border:1px solid var(--ink);background:var(--ink);color:var(--paper);
+  font:500 12px/1 var(--f-body);padding:8px 12px;cursor:pointer;flex-shrink:0;
+}
+.clip-btn.del{background:transparent;color:var(--stop);border-color:var(--stop)}
+.clip video{width:100%;margin-top:12px;background:var(--ink);display:block}
+.clip-err{
+  margin-top:10px;padding:10px 12px;background:var(--stop);color:#fff;
+  font:500 13px/1.5 var(--f-body);
+}
+.clip-add{
+  display:block;width:100%;text-align:center;cursor:pointer;
+  border:1px dashed var(--steel);background:transparent;color:var(--ink-2);
+  font:500 14px/1 var(--f-body);padding:16px;
+}
+.clip-add:hover{border-color:var(--ink);color:var(--ink)}
+.clip-quota{font:400 11px/1.5 var(--f-mono);color:var(--steel);margin-top:8px;text-align:right}
 
 footer{
   padding:26px 18px;text-align:center;
@@ -372,13 +383,13 @@ function pop(){
 back.onclick = pop;
 
 function render(){
-  if(typeof _ovidUrls !== 'undefined'){ _ovidUrls.forEach(u => URL.revokeObjectURL(u)); _ovidUrls = []; }
   const [view, arg] = stack[stack.length - 1];
   back.classList.toggle('on', stack.length > 1);
   main.innerHTML = ({home, tool: toolView, symptom: symView})[view](arg);
   main.scrollTop = 0;
   window.scrollTo(0, 0);
   bind();
+  if(view === 'symptom') renderClips(arg);
 }
 
 // ── Views ──
@@ -537,7 +548,6 @@ function symView(id){
 
   if(s.videos && s.videos.length){
     h += `<div class="vids"><div class="eyebrow">Watch it done</div>
-      <div class="ovids" data-ovids="${s.id}"></div>
       ${s.videos.map(v => `<a class="vid ${v.kind}" href="${esc(v.url)}" target="_blank" rel="noopener">
         <span class="vid-play">${v.kind==='search'?'⌕':'▶'}</span>
         <span class="vid-label">${esc(v.label)}</span>
@@ -545,6 +555,9 @@ function symView(id){
       </a>`).join('')}
     </div>`;
   }
+
+  h += `<div class="clips"><div class="eyebrow">On this device</div>
+    <div id="clips-${s.id}"></div></div>`;
 
   if(s.warning){
     h += `<div class="panel danger">
@@ -556,85 +569,8 @@ function symView(id){
   return h;
 }
 
-// ── Offline saved clips (IndexedDB) ──
-let _ovidUrls = [];
-function vdb(){
-  if(vdb._p) return vdb._p;
-  vdb._p = new Promise((res, rej) => {
-    const r = indexedDB.open('toolfix-videos', 1);
-    r.onupgradeneeded = () => {
-      const st = r.result.createObjectStore('clips', {keyPath:'id', autoIncrement:true});
-      st.createIndex('sym', 'sym');
-    };
-    r.onsuccess = () => res(r.result);
-    r.onerror = () => rej(r.error);
-  });
-  return vdb._p;
-}
-const vAll = sym => vdb().then(d => new Promise((res, rej) => {
-  const q = d.transaction('clips').objectStore('clips').index('sym').getAll(sym);
-  q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error);
-}));
-const vAdd = rec => vdb().then(d => new Promise((res, rej) => {
-  const q = d.transaction('clips','readwrite').objectStore('clips').add(rec);
-  q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error);
-}));
-const vDel = id => vdb().then(d => new Promise((res, rej) => {
-  const q = d.transaction('clips','readwrite').objectStore('clips').delete(id);
-  q.onsuccess = () => res(); q.onerror = () => rej(q.error);
-}));
-const mb = n => (n/1048576).toFixed(1) + ' MB';
-
-async function hydrateOvids(box){
-  const sym = box.dataset.ovids;
-  let clips = [];
-  try{ clips = await vAll(sym); }catch(e){}
-  const total = clips.reduce((a,c) => a + (c.size||0), 0);
-  box.innerHTML = clips.map(c => {
-    const url = URL.createObjectURL(c.blob);
-    _ovidUrls.push(url);
-    return `<div class="ovid">
-      <video controls preload="metadata" playsinline src="${url}"></video>
-      <div class="ovid-row">
-        <span class="ovid-name">${esc(c.name || 'Saved clip')}</span>
-        <span class="ovid-size">${mb(c.size||0)} · OFFLINE</span>
-        <button class="ovid-del" data-del="${c.id}">REMOVE</button>
-      </div>
-    </div>`;
-  }).join('')
-  + (clips.length ? `<div class="ovid-total">${clips.length} CLIP${clips.length>1?'S':''} SAVED · ${mb(total)} ON THIS PHONE</div>` : '')
-  + `<label class="ovid-add">＋ Save a video on this phone
-      <input type="file" accept="video/mp4,video/webm,video/*" hidden></label>`;
-
-  box.querySelector('input[type=file]').onchange = async e => {
-    const f = e.target.files[0];
-    if(!f) return;
-    if(f.size > 250*1048576){
-      alert('That file is ' + mb(f.size) + ' — too big to store. Compress it first (360p or 480p is plenty for a repair clip).');
-      return;
-    }
-    try{ if(navigator.storage && navigator.storage.persist) navigator.storage.persist(); }catch(_){}
-    try{
-      await vAdd({sym, name:f.name, size:f.size, type:f.type, savedAt:Date.now(), blob:f});
-    }catch(err){
-      alert('Could not save — the phone may be out of storage space.');
-      return;
-    }
-    hydrateOvids(box);
-  };
-  box.querySelectorAll('[data-del]').forEach(b => b.onclick = async () => {
-    if(!confirm('Remove this saved video from the phone?')) return;
-    await vDel(Number(b.dataset.del));
-    hydrateOvids(box);
-  });
-  box.querySelectorAll('video').forEach(v => v.onerror = () => {
-    v.outerHTML = '<div class="ovid-err">This video is in a format this phone cannot play (often HEVC/H.265). Convert it to H.264 MP4 — the oola-convert.bat script does this — then save it again.</div>';
-  });
-}
-
 // ── Bind ──
 function bind(){
-  main.querySelectorAll('[data-ovids]').forEach(hydrateOvids);
   main.querySelectorAll('[data-tool]').forEach(b =>
     b.onclick = () => go('tool', b.dataset.tool));
   main.querySelectorAll('[data-sym]').forEach(b =>
@@ -642,6 +578,100 @@ function bind(){
   // Electrician-only warnings cannot be collapsed away.
   main.querySelectorAll('.cause.gated > summary').forEach(sm =>
     sm.addEventListener('click', e => e.preventDefault()));
+}
+
+// ── Device clips (IndexedDB) ──
+const CLIP_CAP = 250 * 1024 * 1024;
+let _db = null;
+function db(){
+  return _db ? Promise.resolve(_db) : new Promise((res, rej) => {
+    const r = indexedDB.open('toolfix', 1);
+    r.onupgradeneeded = () => {
+      const s = r.result.createObjectStore('clips', {keyPath: 'id', autoIncrement: true});
+      s.createIndex('bySym', 'symptomId');
+    };
+    r.onsuccess = () => { _db = r.result; res(_db); };
+    r.onerror = () => rej(r.error);
+  });
+}
+function clipsFor(sym){
+  return db().then(d => new Promise((res, rej) => {
+    const q = d.transaction('clips').objectStore('clips').index('bySym').getAll(sym);
+    q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error);
+  }));
+}
+function clipsTotal(){
+  return db().then(d => new Promise((res) => {
+    const q = d.transaction('clips').objectStore('clips').getAll();
+    q.onsuccess = () => res(q.result.reduce((a,c) => a + c.size, 0));
+    q.onerror = () => res(0);
+  }));
+}
+function saveClip(sym, file){
+  return clipsTotal().then(total => {
+    if (total + file.size > CLIP_CAP)
+      throw new Error('Storage full: ' + fmtMB(total) + ' of ' + fmtMB(CLIP_CAP) + ' used. Delete old clips first.');
+    return db().then(d => new Promise((res, rej) => {
+      const tx = d.transaction('clips', 'readwrite');
+      tx.objectStore('clips').add({
+        symptomId: sym, name: file.name, size: file.size,
+        type: file.type, blob: file, addedAt: Date.now()
+      });
+      tx.oncomplete = res; tx.onerror = () => rej(tx.error);
+    }));
+  });
+}
+function delClip(id){
+  return db().then(d => new Promise((res, rej) => {
+    const tx = d.transaction('clips', 'readwrite');
+    tx.objectStore('clips').delete(id);
+    tx.oncomplete = res; tx.onerror = () => rej(tx.error);
+  }));
+}
+function fmtMB(b){ return (b/1024/1024).toFixed(1) + ' MB'; }
+
+function renderClips(sym){
+  const host = document.getElementById('clips-' + sym);
+  if(!host) return;
+  Promise.all([clipsFor(sym), clipsTotal()]).then(([clips, total]) => {
+    host.innerHTML = `
+      ${clips.map(c => `<div class="clip" data-clip="${c.id}">
+        <div class="clip-row">
+          <span class="clip-name">${esc(c.name)}</span>
+          <span class="clip-size">${fmtMB(c.size)}</span>
+          <button class="clip-btn" data-play="${c.id}">Play</button>
+          <button class="clip-btn del" data-del="${c.id}">✕</button>
+        </div>
+        <div class="clip-slot"></div>
+      </div>`).join('')}
+      <label class="clip-add">+ Save a video to this fault
+        <input type="file" accept="video/*" hidden data-add="${sym}">
+      </label>
+      <div class="clip-quota">${fmtMB(total)} of ${fmtMB(CLIP_CAP)} used on this device</div>`;
+
+    host.querySelectorAll('[data-add]').forEach(inp => inp.onchange = () => {
+      const f = inp.files[0]; if(!f) return;
+      saveClip(sym, f).then(() => renderClips(sym))
+        .catch(e => alert(e.message));
+    });
+    host.querySelectorAll('[data-del]').forEach(b => b.onclick = () => {
+      if(confirm('Delete this clip from this device?'))
+        delClip(+b.dataset.del).then(() => renderClips(sym));
+    });
+    host.querySelectorAll('[data-play]').forEach(b => b.onclick = () => {
+      const card = b.closest('.clip'), slot = card.querySelector('.clip-slot');
+      if(slot.innerHTML){ slot.innerHTML=''; b.textContent='Play'; return; }
+      clipsFor(sym).then(cs => {
+        const c = cs.find(x => x.id === +b.dataset.play);
+        const url = URL.createObjectURL(c.blob);
+        slot.innerHTML = `<video controls playsinline src="${url}"></video>`;
+        b.textContent = 'Close';
+        slot.querySelector('video').onerror = () => {
+          slot.innerHTML = '<div class="clip-err">This phone saved the video in a format Chrome cannot play (often HEVC). Re-record with the camera set to "most compatible", or convert the file to H.264 MP4 on the laptop.</div>';
+        };
+      });
+    });
+  });
 }
 
 // ── Boot ──
