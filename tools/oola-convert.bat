@@ -25,12 +25,17 @@ if "%~1"=="" (
   exit /b
 )
 
-where ffmpeg >nul 2>nul
-if errorlevel 1 (
+set "FF=ffmpeg"
+if exist "%~dp0ffmpeg.exe" set "FF=%~dp0ffmpeg.exe"
+where %FF% >nul 2>nul
+if errorlevel 1 if not exist "%~dp0ffmpeg.exe" (
   echo.
-  echo   ffmpeg is not installed. Install it once with:
-  echo       winget install ffmpeg
-  echo   then run this again.
+  echo   ffmpeg was not found. Easiest fix:
+  echo   1. On the laptop, download ffmpeg from  www.gyan.dev/ffmpeg/builds
+  echo      ^(the "essentials" zip^)
+  echo   2. Open the zip, go into the "bin" folder inside it
+  echo   3. Copy the single file  ffmpeg.exe  into the SAME folder as this .bat
+  echo   4. Run this again. No installing needed.
   echo.
   pause
   exit /b
@@ -51,7 +56,7 @@ if not "%TSTART%"=="" set "TRIM=-ss %TSTART%"
 if not "%TEND%"=="" set "TRIM=%TRIM% -to %TEND%"
 
 echo.
-ffmpeg -y -i "%IN%" %TRIM% -vf "scale=-2:720" -c:v libx264 -crf 26 -preset fast -c:a aac -b:a 64k -ac 1 -movflags +faststart "%OUT%"
+"%FF%" -y -i "%IN%" %TRIM% -vf "scale=-2:720" -c:v libx264 -crf 26 -preset fast -c:a aac -b:a 64k -ac 1 -movflags +faststart "%OUT%"
 
 echo.
 echo   ------------------------------------------------------------
