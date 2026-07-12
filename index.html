@@ -644,15 +644,18 @@ function renderClips(sym){
         </div>
         <div class="clip-slot"></div>
       </div>`).join('')}
-      <label class="clip-add">+ Save a video to this fault
-        <input type="file" accept="video/*" hidden data-add="${sym}">
+      <label class="clip-add">+ Save video(s) to this fault
+        <input type="file" accept="video/*" multiple hidden data-add="${sym}">
       </label>
       <div class="clip-quota">${fmtMB(total)} of ${fmtMB(CLIP_CAP)} used on this device</div>`;
 
-    host.querySelectorAll('[data-add]').forEach(inp => inp.onchange = () => {
-      const f = inp.files[0]; if(!f) return;
-      saveClip(sym, f).then(() => renderClips(sym))
-        .catch(e => alert(e.message));
+    host.querySelectorAll('[data-add]').forEach(inp => inp.onchange = async () => {
+      const files = [...inp.files]; if(!files.length) return;
+      for(const f of files){
+        try { await saveClip(sym, f); }
+        catch(e){ alert(f.name + ': ' + e.message); break; }
+      }
+      renderClips(sym);
     });
     host.querySelectorAll('[data-del]').forEach(b => b.onclick = () => {
       if(confirm('Delete this clip from this device?'))
